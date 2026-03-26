@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>四腿票完全攻略 — 外站四段票圖解</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+:root {
+  --ink:#101828; --ink2:#344054; --ink3:#667085;
+  --bg:#f9fafb; --surface:#ffffff; --surface2:#f2f4f7;
+  --accent:#dc2626; --accent-soft:rgba(220,38,38,0.08);
+  --navy:#0c2340; --navy2:#1a3a5c; --navy-light:#2d5a8e;
+  --teal:#0d9488; --teal-soft:rgba(13,148,136,0.1);
+  --gold:#ca8a04; --gold-soft:rgba(202,138,4,0.1);
+  --blue:#2563eb;
+  --leg1:#dc2626; --leg2:#0c2340; --leg3:#0d9488; --leg4:#ca8a04;
+  --radius:16px; --radius-sm:10px; --radius-xs:6px;
+  --shadow-sm:0 1px 3px rgba(16,24,40,0.06),0 1px 2px rgba(16,24,40,0.04);
+  --shadow-md:0 4px 16px rgba(16,24,40,0.08);
+  --shadow-lg:0 12px 48px rgba(16,24,40,0.1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Sans TC','DM Sans',system-ui,sans-serif;
+  background:var(--bg);color:var(--ink);
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+.hidden{display:none!important}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* ====== HERO ====== */
+.hero{
+  position:relative;min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;padding:80px 28px;
+  background:var(--navy);overflow:hidden;
+}
+.hero-noise{
+  position:absolute;inset:0;opacity:0.35;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size:200px;pointer-events:none;
+}
+.hero-glow{position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(220,38,38,0.12) 0%,transparent 70%);top:-15%;left:-10%;pointer-events:none}
+.hero-glow2{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(13,148,136,0.1) 0%,transparent 70%);bottom:-10%;right:-5%;pointer-events:none}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:7px 18px;border-radius:100px;
+  border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);
+  color:rgba(255,255,255,0.6);font-size:12px;font-weight:600;letter-spacing:3px;
+  text-transform:uppercase;margin-bottom:32px;position:relative;z-index:1;
+  animation:fadeUp .8s ease both;
+}
+.hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.hero h1{
+  font-size:clamp(2.6rem,7vw,5rem);font-weight:900;color:#fff;
+  text-align:center;line-height:1.12;margin-bottom:24px;
+  position:relative;z-index:1;letter-spacing:-1px;animation:fadeUp .8s ease .1s both;
+}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,#f87171,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:rgba(255,255,255,0.5);font-size:clamp(1rem,2.2vw,1.2rem);text-align:center;max-width:540px;line-height:1.9;font-weight:300;position:relative;z-index:1;animation:fadeUp .8s ease .2s both}
+.hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,0.25);font-size:11px;letter-spacing:3px;z-index:1;animation:pulse 2.5s ease-in-out infinite}
+.hero-scroll .line{width:1px;height:40px;background:linear-gradient(transparent,rgba(255,255,255,0.25))}
+
+/* ====== SECTION ====== */
+.sec{padding:96px 28px}
+.sec-inner{max-width:1040px;margin:0 auto}
+.sec-eyebrow{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.sec-eyebrow::before{content:'';width:20px;height:2px;background:var(--accent);border-radius:2px}
+.sec h2{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:800;line-height:1.25;color:var(--ink);margin-bottom:16px;letter-spacing:-.5px}
+.sec .lead{font-size:1.05rem;line-height:2;color:var(--ink3);max-width:680px;font-weight:300}
+
+/* ====== ROUTE ====== */
+.route-card{background:var(--surface);border-radius:var(--radius);padding:40px 28px;margin-top:48px;box-shadow:var(--shadow-md);position:relative;overflow:hidden;border:1px solid rgba(0,0,0,0.04)}
+.route-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--leg1),var(--leg2),var(--leg3),var(--leg4))}
+.route-header{text-align:center;margin-bottom:36px}
+.route-airline{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:100px;background:var(--surface2);font-size:13px;font-weight:600;color:var(--ink2)}
+.route-airline::before{content:'✦';color:var(--teal);font-size:10px}
+.legs{display:flex;flex-direction:column;position:relative}
+.leg{display:grid;grid-template-columns:52px 1fr;gap:14px;align-items:start;position:relative}
+.leg-num{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:16px;color:#fff;position:relative;z-index:2}
+.leg-line{position:absolute;left:21px;top:44px;width:2px;height:calc(100% - 44px);z-index:1}
+.leg-body{padding:14px 18px;border-radius:var(--radius-sm);background:var(--surface2);margin-bottom:12px;border-left:3px solid;transition:transform .2s,box-shadow .2s}
+.leg-body:hover{transform:translateX(4px);box-shadow:var(--shadow-sm)}
+.leg-airports{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.iata{font-family:'JetBrains Mono',monospace;font-size:1.25rem;font-weight:700}
+.flight-line{flex:1;height:0;min-width:36px;position:relative;border-top:2px dashed;opacity:.25}
+.flight-line::after{content:'✈';position:absolute;right:-4px;top:-11px;font-size:14px;opacity:1}
+.leg-desc{font-size:.82rem;color:var(--ink3);font-weight:400}
+.leg-badge{display:inline-block;padding:2px 10px;border-radius:100px;font-size:.68rem;font-weight:700;color:#fff;margin-left:6px;vertical-align:middle;letter-spacing:.5px}
+.stopover{display:flex;align-items:center;gap:12px;padding:10px 18px;margin:0 0 12px 58px;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--accent-soft),var(--gold-soft));border:1px dashed rgba(220,38,38,0.2)}
+.stopover-icon{font-size:18px}
+.stopover-text{font-size:.82rem;font-weight:500;color:var(--accent)}
+.stopover-sub{font-size:.72rem;color:var(--ink3)}
+
+/* ====== PRICE ====== */
+.price-sec{background:var(--navy);padding:96px 28px;color:#fff}
+.price-sec .sec-eyebrow{color:var(--gold)}.price-sec .sec-eyebrow::before{background:var(--gold)}
+.price-sec h2{color:#fff}.price-sec .lead{color:rgba(255,255,255,0.45)}
+.toggle-bar{display:inline-flex;border-radius:100px;overflow:hidden;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);margin:32px 0 8px}
+.tab-btn{padding:10px 28px;border:none;background:none;font-family:inherit;font-size:.88rem;font-weight:600;color:rgba(255,255,255,0.4);cursor:pointer;transition:all .3s}
+.tab-btn.on{background:var(--accent);color:#fff;border-radius:100px;box-shadow:0 2px 12px rgba(220,38,38,0.3)}
+.tab-btn:hover:not(.on){color:rgba(255,255,255,0.7)}
+.price-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:36px}
+@media(max-width:680px){.price-grid{grid-template-columns:1fr}}
+.pcard{border-radius:var(--radius);padding:28px 24px;position:relative;overflow:hidden;transition:transform .25s}
+.pcard:hover{transform:translateY(-3px)}
+.pcard.std{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07)}
+.pcard.hot{background:linear-gradient(135deg,rgba(220,38,38,0.08),rgba(202,138,4,0.06));border:1px solid rgba(202,138,4,0.25)}
+.pcard.hot::after{content:'推薦';position:absolute;top:14px;right:-26px;background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:3px 32px;transform:rotate(45deg);letter-spacing:2px}
+.pcard-label{font-size:.75rem;letter-spacing:2px;font-weight:600;opacity:.4;margin-bottom:6px}
+.pcard-title{font-size:1.1rem;font-weight:700;margin-bottom:18px}
+.pcard-route{display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:.88rem}
+.pcard-route:last-of-type{border:none}
+.pcard-route .c{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.82rem}
+.pcard-route .a{opacity:.3;font-size:.7rem}
+.pcard-total{margin-top:20px;padding-top:16px;border-top:2px solid rgba(255,255,255,0.1);display:flex;justify-content:space-between;align-items:baseline}
+.pcard-total .l{font-size:.82rem;opacity:.4}
+.pcard-total .v{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700}
+.pcard-total .cur{font-size:.8rem;font-weight:400;opacity:.5;margin-right:2px}
+.save-strip{margin-top:28px;padding:18px 24px;border-radius:var(--radius-sm);background:rgba(13,148,136,0.1);border:1px solid rgba(13,148,136,0.2);text-align:center}
+.save-strip .big{font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:700;color:var(--teal)}
+.save-strip .sub{font-size:.85rem;color:rgba(255,255,255,0.4);margin-top:2px}
+.bktable{margin-top:32px;border-radius:var(--radius-sm);overflow:hidden;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05)}
+.bk-head{display:grid;grid-template-columns:2fr 1fr 1fr;padding:12px 20px;font-size:.7rem;letter-spacing:2px;font-weight:700;opacity:.3;border-bottom:1px solid rgba(255,255,255,0.06)}
+.bk-row{display:grid;grid-template-columns:2fr 1fr 1fr;padding:12px 20px;font-size:.88rem;border-bottom:1px solid rgba(255,255,255,0.03);align-items:center}
+.bk-row:last-child{border:none}
+.bk-row .rl{display:flex;align-items:center;gap:8px}
+.bk-row .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.bk-row .np{opacity:.35}
+.bk-row .fp{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--teal)}
+
+/* ====== ADVANTAGES ====== */
+.adv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:40px}
+.adv{background:var(--surface);border-radius:var(--radius);padding:28px 22px;box-shadow:var(--shadow-sm);border:1px solid rgba(0,0,0,0.04);transition:transform .2s,box-shadow .2s}
+.adv:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.adv-ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px}
+.adv h3{font-size:.98rem;font-weight:700;color:var(--ink);margin-bottom:6px}
+.adv p{font-size:.85rem;line-height:1.7;color:var(--ink3);font-weight:300}
+.warns{display:flex;flex-direction:column;gap:10px;margin-top:36px}
+.warn{display:flex;align-items:flex-start;gap:14px;padding:16px 20px;background:var(--surface);border-radius:var(--radius-sm);border-left:3px solid var(--accent);box-shadow:var(--shadow-sm)}
+.warn-ico{font-size:18px;flex-shrink:0;margin-top:2px}
+.warn strong{display:block;font-size:.92rem;margin-bottom:3px}
+.warn span{font-size:.84rem;color:var(--ink3);line-height:1.65;font-weight:300}
+
+/* ====== COMBO ====== */
+.combo-sec{position:relative;padding:96px 28px;color:#fff;overflow:hidden;background:linear-gradient(165deg,#070f1a 0%,var(--navy) 50%,var(--navy2) 100%)}
+.combo-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 400px at 10% 90%,rgba(13,148,136,0.08),transparent),radial-gradient(ellipse 500px 500px at 90% 10%,rgba(220,38,38,0.05),transparent);pointer-events:none}
+.combo-inner{max-width:1040px;margin:0 auto;position:relative;z-index:1}
+.combo-inner h2{color:#fff;margin-bottom:10px}
+.combo-inner .lead{color:rgba(255,255,255,0.4)}
+.combo-tabs{display:inline-flex;gap:10px;margin:36px 0 12px}
+.ctab{padding:11px 28px;border-radius:100px;border:1.5px solid rgba(255,255,255,0.12);background:transparent;color:rgba(255,255,255,0.45);font-family:inherit;font-size:.92rem;font-weight:600;cursor:pointer;transition:all .3s}
+.ctab.on{background:linear-gradient(135deg,var(--accent),#b91c1c);border-color:transparent;color:#fff;box-shadow:0 4px 24px rgba(220,38,38,0.3)}
+.ctab:hover:not(.on){border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.8)}
+.formula{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:36px 0 16px;padding:28px 20px;background:rgba(255,255,255,0.03);border-radius:var(--radius);border:1px solid rgba(255,255,255,0.06);backdrop-filter:blur(8px)}
+.fp{text-align:center;padding:10px 16px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);min-width:76px}
+.fp.res{background:rgba(13,148,136,0.1);border-color:rgba(13,148,136,0.25)}
+.fp-icon{font-size:1.5rem;margin-bottom:2px}
+.fp-label{font-size:.72rem;font-weight:600;opacity:.8;white-space:nowrap}
+.fop{font-size:1.3rem;font-weight:300;opacity:.3;padding:0 2px}
+.combo-sub{text-align:center;font-size:.85rem;color:rgba(255,255,255,0.35);margin-bottom:28px;font-weight:300}
+.receipt{background:rgba(0,0,0,0.3);border-radius:var(--radius);padding:28px 24px;margin-bottom:28px;border:1px solid rgba(255,255,255,0.05);backdrop-filter:blur(4px)}
+.receipt-title{font-size:.88rem;font-weight:700;margin-bottom:18px;letter-spacing:.5px}
+.rrow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:.88rem}
+.rrow.ghost{opacity:.4}
+.rrow-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rtag{display:inline-block;padding:2px 10px;border-radius:100px;font-size:.65rem;font-weight:700;color:#fff;letter-spacing:.8px;flex-shrink:0}
+.rprice{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.92rem;white-space:nowrap}
+.rtotal{display:flex;justify-content:space-between;align-items:center;padding-top:18px;margin-top:10px;border-top:2px solid rgba(202,138,4,0.35)}
+.rtotal-label{font-size:.78rem;opacity:.4}
+.rtotal-sub{font-size:.85rem;font-weight:600;color:var(--gold);margin-top:2px}
+.rtotal-amount{font-family:'JetBrains Mono',monospace;font-size:1.9rem;font-weight:700;color:var(--teal)}
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:stretch}
+@media(max-width:720px){.vs{grid-template-columns:1fr}.vs-mid{justify-content:center}}
+.vsbox{border-radius:var(--radius-sm);padding:22px 18px}
+.vsbox.old{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)}
+.vsbox.new{background:linear-gradient(135deg,rgba(13,148,136,0.08),rgba(202,138,4,0.06));border:1.5px solid rgba(13,148,136,0.2)}
+.vs-label{font-size:.72rem;font-weight:700;letter-spacing:2px;opacity:.4;margin-bottom:12px}
+.vs-row{display:flex;justify-content:space-between;font-size:.85rem;padding:5px 0;opacity:.6}
+.vs-row.tot{font-weight:700;opacity:1;font-size:.92rem}
+.vs-row span{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.82rem}
+.vs-div{height:1px;background:rgba(255,255,255,0.08);margin:4px 0}
+.vs-mid{display:flex;align-items:center}
+.vs-badge{background:linear-gradient(135deg,var(--accent),#b91c1c);color:#fff;border-radius:var(--radius-sm);padding:16px 14px;text-align:center;font-size:.7rem;line-height:1.4;box-shadow:0 4px 20px rgba(220,38,38,0.25)}
+.vs-badge strong{display:block;font-family:'JetBrains Mono',monospace;font-size:.92rem;margin-top:2px}
+.vs-trips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.chip{display:inline-block;padding:4px 12px;border-radius:100px;font-size:.72rem;font-weight:600}
+.chip.long{background:rgba(37,99,235,0.12);border:1px solid rgba(37,99,235,0.2);color:var(--blue)}
+.chip.short{background:var(--gold-soft);border:1px solid rgba(202,138,4,0.2);color:var(--gold)}
+
+/* ====== TIMELINE ====== */
+.tl-sec{background:linear-gradient(180deg,var(--bg) 0%,#fff 100%);padding:96px 28px}
+.tl-inner{max-width:1040px;margin:0 auto}
+.tl{position:relative;margin-top:48px}
+.tl::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--leg1),var(--leg2),var(--leg3),var(--leg4),var(--accent));transform:translateX(-50%)}
+@media(max-width:680px){.tl::before{left:20px}}
+.tl-item{display:flex;align-items:flex-start;margin-bottom:32px;position:relative}
+.tl-item:nth-child(odd){flex-direction:row}
+.tl-item:nth-child(even){flex-direction:row-reverse}
+.tl-dot{position:absolute;left:50%;transform:translateX(-50%);width:18px;height:18px;border-radius:50%;border:3px solid #fff;z-index:2;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+@media(max-width:680px){.tl-dot{left:20px}.tl-item{flex-direction:row!important;padding-left:48px}}
+.tl-card{width:42%;background:var(--surface);border-radius:var(--radius-sm);padding:18px 20px;box-shadow:var(--shadow-sm);border:1px solid rgba(0,0,0,0.04)}
+@media(max-width:680px){.tl-card{width:100%}}
+.tl-card .mo{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:2px;font-weight:700;margin-bottom:4px}
+.tl-card h4{font-size:.95rem;font-weight:700;margin-bottom:3px}
+.tl-card p{font-size:.82rem;color:var(--ink3);line-height:1.6;font-weight:300}
+.tl-tag{display:inline-block;margin-top:8px;padding:3px 11px;border-radius:100px;font-size:.68rem;font-weight:700;letter-spacing:.5px}
+.tl-tag.inc{background:var(--teal-soft);color:var(--teal);border:1px solid rgba(13,148,136,0.2)}
+.tl-tag.ext{background:var(--accent-soft);color:var(--accent);border:1px solid rgba(220,38,38,0.15)}
+.gtbar{margin-top:48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;background:var(--surface);border-radius:var(--radius);padding:28px 32px;box-shadow:var(--shadow-lg);border:2px solid var(--teal)}
+.gt-title{font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:8px}
+.gt-chips{display:flex;flex-wrap:wrap;gap:6px}
+.gt-right{text-align:right}
+.gt-amount{font-family:'JetBrains Mono',monospace;font-size:2.1rem;font-weight:700;color:var(--teal)}
+.gt-old{font-size:.82rem;color:var(--ink3);text-decoration:line-through;margin-top:2px}
+
+/* ====== FOOTER ====== */
+.foot{text-align:center;padding:48px 28px;background:var(--navy);color:rgba(255,255,255,0.25);font-size:.78rem}
+.foot .note{max-width:560px;margin:0 auto;line-height:1.8}
+
+/* ====== ANIMATIONS ====== */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:.25}50%{opacity:.6}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-noise"></div><div class="hero-glow"></div><div class="hero-glow2"></div>
+  <div class="hero-eyebrow">機票省錢攻略</div>
+  <h1>什麼是<em>四腿票</em>？</h1>
+  <p class="hero-sub">一張機票、四段航程、外站出發<br>用航空公司的定價邏輯，幫自己省下一趟亞洲來回</p>
+  <div class="hero-scroll">SCROLL<div class="line"></div></div>
+</section>
+
+<!-- CONCEPT -->
+<section class="sec">
+  <div class="sec-inner">
+    <div class="sec-eyebrow">概念拆解</div>
+    <h2>四腿票的結構</h2>
+    <p class="lead">四腿票的核心概念：從「外站」（非你居住的城市）買一張包含四段航程的多城市機票。因為不同出發地套用不同市場定價，利用這個價差，四段加起來反而比台北直飛來回便宜。</p>
+    <div class="route-card reveal">
+      <div class="route-header"><div class="route-airline">長榮航空 經濟艙｜外站＝沖繩 OKA</div></div>
+      <div class="legs">
+        <div class="leg"><div class="leg-num" style="background:var(--leg1)">1</div><div class="leg-body" style="border-color:var(--leg1)"><div class="leg-airports"><span class="iata" style="color:var(--leg1)">OKA</span><div class="flight-line" style="border-color:var(--leg1);color:var(--leg1)"></div><span class="iata" style="color:var(--leg1)">TPE</span></div><div class="leg-desc">沖繩那霸 → 台北桃園<span class="leg-badge" style="background:var(--leg1)">起飛腿</span></div></div><div class="leg-line" style="background:linear-gradient(var(--leg1),var(--leg2))"></div></div>
+        <div class="stopover"><div class="stopover-icon">🏠</div><div><div class="stopover-text">回台灣停留（中停）</div><div class="stopover-sub">可停留數天至數月，期間正常生活、工作</div></div></div>
+        <div class="leg"><div class="leg-num" style="background:var(--leg2)">2</div><div class="leg-body" style="border-color:var(--leg2)"><div class="leg-airports"><span class="iata" style="color:var(--leg2)">TPE</span><div class="flight-line" style="border-color:var(--leg2);color:var(--leg2)"></div><span class="iata" style="color:var(--leg2)">CDG</span></div><div class="leg-desc">台北桃園 → 巴黎戴高樂<span class="leg-badge" style="background:var(--leg2)">長程去程</span></div></div><div class="leg-line" style="background:linear-gradient(var(--leg2),var(--leg3))"></div></div>
+        <div class="leg"><div class="leg-num" style="background:var(--leg3)">3</div><div class="leg-body" style="border-color:var(--leg3)"><div class="leg-airports"><span class="iata" style="color:var(--leg3)">CDG</span><div class="flight-line" style="border-color:var(--leg3);color:var(--leg3)"></div><span class="iata" style="color:var(--leg3)">TPE</span></div><div class="leg-desc">巴黎戴高樂 → 台北桃園<span class="leg-badge" style="background:var(--leg3)">長程回程</span></div></div><div class="leg-line" style="background:linear-gradient(var(--leg3),var(--leg4))"></div></div>
+        <div class="stopover"><div class="stopover-icon">🏠</div><div><div class="stopover-text">再次回台灣停留</div><div class="stopover-sub">從歐洲回來後，繼續日常或規劃下一段旅行</div></div></div>
+        <div class="leg"><div class="leg-num" style="background:var(--leg4)">4</div><div class="leg-body" style="border-color:var(--leg4)"><div class="leg-airports"><span class="iata" style="color:var(--leg4)">TPE</span><div class="flight-line" style="border-color:var(--leg4);color:var(--leg4)"></div><span class="iata" style="color:var(--leg4)">OKA</span></div><div class="leg-desc">台北桃園 → 沖繩那霸<span class="leg-badge" style="background:var(--leg4)">收尾腿</span></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICE -->
+<section class="price-sec">
+  <div class="sec-inner">
+    <div class="sec-eyebrow">票價實戰</div>
+    <h2>到底省多少？以台北↔巴黎為例</h2>
+    <p class="lead">以長榮航空經濟艙為例，比較直接從台北買來回票 vs. 外站四腿票的價格差異。票價僅供示範參考，實際價格依搜尋日期與艙等浮動。</p>
+    <div class="toggle-bar"><button class="tab-btn on" onclick="showCls('eco')">經濟艙</button><button class="tab-btn" onclick="showCls('biz')">商務艙</button></div>
+    <div id="eco-view">
+      <div class="price-grid">
+        <div class="pcard std reveal"><div class="pcard-label">一般購票方式</div><div class="pcard-title">台北直飛巴黎來回</div><div class="pcard-route"><span class="c">TPE</span><span class="a">→</span><span class="c">CDG</span></div><div class="pcard-route"><span class="c">CDG</span><span class="a">→</span><span class="c">TPE</span></div><div class="pcard-total"><span class="l">來回含稅</span><span class="v"><span class="cur">NT$</span>28,500</span></div></div>
+        <div class="pcard hot reveal"><div class="pcard-label">外站四腿票</div><div class="pcard-title">沖繩出發 經巴黎</div><div class="pcard-route"><span class="c">OKA</span><span class="a">→</span><span class="c">TPE</span></div><div class="pcard-route"><span class="c">TPE</span><span class="a">→</span><span class="c">CDG</span></div><div class="pcard-route"><span class="c">CDG</span><span class="a">→</span><span class="c">TPE</span></div><div class="pcard-route"><span class="c">TPE</span><span class="a">→</span><span class="c">OKA</span></div><div class="pcard-total"><span class="l">四段含稅</span><span class="v"><span class="cur">NT$</span>19,800</span></div></div>
+      </div>
+      <div class="save-strip reveal"><div class="big">省下 NT$ 8,700</div><div class="sub">四段航程比兩段來回還便宜，還多送兩趟沖繩短程</div></div>
+      <div class="bktable reveal">
+        <div class="bk-head"><span>航段</span><span>直購參考</span><span>四腿票分攤</span></div>
+        <div class="bk-row"><div class="rl"><div class="dot" style="background:var(--leg1)"></div>OKA → TPE</div><div class="np">NT$ 4,200</div><div class="fp">含在票內</div></div>
+        <div class="bk-row"><div class="rl"><div class="dot" style="background:var(--leg2)"></div>TPE → CDG</div><div class="np">NT$ 14,250</div><div class="fp">含在票內</div></div>
+        <div class="bk-row"><div class="rl"><div class="dot" style="background:var(--leg3)"></div>CDG → TPE</div><div class="np">NT$ 14,250</div><div class="fp">含在票內</div></div>
+        <div class="bk-row"><div class="rl"><div class="dot" style="background:var(--leg4)"></div>TPE → OKA</div><div class="np">NT$ 4,200</div><div class="fp">含在票內</div></div>
+        <div class="bk-row" style="background:rgba(255,255,255,0.02)"><div class="rl" style="font-weight:700">合計</div><div class="np" style="font-family:'JetBrains Mono',monospace;font-weight:700;opacity:.5">NT$ 36,900</div><div class="fp" style="font-size:1rem">NT$ 19,800</div></div>
+      </div>
+    </div>
+    <div id="biz-view" class="hidden">
+      <div class="price-grid">
+        <div class="pcard std reveal"><div class="pcard-label">一般購票方式</div><div class="pcard-title">台北直飛巴黎商務艙</div><div class="pcard-route"><span class="c">TPE</span><span class="a">→</span><span class="c">CDG</span></div><div class="pcard-route"><span class="c">CDG</span><span class="a">→</span><span class="c">TPE</span></div><div class="pcard-total"><span class="l">來回含稅</span><span class="v"><span class="cur">NT$</span>148,000</span></div></div>
+        <div class="pcard hot reveal"><div class="pcard-label">外站四腿票</div><div class="pcard-title">吉隆坡出發 經巴黎 商務艙</div><div class="pcard-route"><span class="c">KUL</span><span class="a">→</span><span class="c">TPE</span></div><div class="pcard-route"><span class="c">TPE</span><span class="a">→</span><span class="c">CDG</span></div><div class="pcard-route"><span class="c">CDG</span><span class="a">→</span><span class="c">TPE</span></div><div class="pcard-route"><span class="c">TPE</span><span class="a">→</span><span class="c">KUL</span></div><div class="pcard-total"><span class="l">四段含稅</span><span class="v"><span class="cur">NT$</span>75,000</span></div></div>
+      </div>
+      <div class="save-strip reveal"><div class="big">省下 NT$ 73,000</div><div class="sub">商務艙四腿票若遇到促銷艙開放（如長榮 KUL 出發），價差極為驚人</div></div>
+      <p style="text-align:center;margin-top:16px;font-size:.8rem;color:rgba(255,255,255,0.3)">⚠ 商務艙外站票不一定每次都有如此價差，需碰到航空公司對特定市場開放促銷艙（D艙）才會出現</p>
+    </div>
+  </div>
+</section>
+
+<!-- ADVANTAGES -->
+<section class="sec">
+  <div class="sec-inner">
+    <div class="sec-eyebrow">優勢與風險</div>
+    <h2>四腿票的好處</h2>
+    <div class="adv-grid">
+      <div class="adv reveal"><div class="adv-ico" style="background:var(--accent-soft);color:var(--accent)">💰</div><h3>極高價格優勢</h3><p>外站市場的促銷艙位多，經多航段平均分攤後，總價通常比台北直飛來回便宜一至兩萬。</p></div>
+      <div class="adv reveal"><div class="adv-ico" style="background:rgba(37,99,235,0.08);color:var(--blue)">🗓️</div><h3>合法中停拆分旅行</h3><p>利用一張票的「中停」權利，在台灣停留數月再飛長程段，等同一年安排多次旅行。</p></div>
+      <div class="adv reveal"><div class="adv-ico" style="background:var(--teal-soft);color:var(--teal)">✈️</div><h3>四段累積哩程</h3><p>飛四段航程累積的飛行哩程比單純來回更豐厚，加速集點兌換下一次免費機票。</p></div>
+      <div class="adv reveal"><div class="adv-ico" style="background:var(--gold-soft);color:var(--gold)">🌏</div><h3>送你亞洲短旅</h3><p>第一、四腿本身就是一趟沖繩或曼谷短程旅行，等於省下的錢直接變成假期。</p></div>
+    </div>
+    <h2 style="margin-top:56px">注意事項</h2>
+    <div class="warns">
+      <div class="warn reveal"><div class="warn-ico">🚫</div><div><strong>航段不可跳過</strong><span>四段必須按順序飛行。第一段若不飛，後面全部航段自動作廢。這是最重要的規則。</span></div></div>
+      <div class="warn reveal"><div class="warn-ico">🎫</div><div><strong>需額外自費前往外站</strong><span>你需要先自費買一張台北→沖繩的單程票（約 NT$2,000～4,000 廉航），才能「啟動」第一腿。</span></div></div>
+      <div class="warn reveal"><div class="warn-ico">🧳</div><div><strong>行李直掛需確認</strong><span>通常可以設定行李直掛，但在中停點（台灣）可能需要先提領再重新掛。建議向航空公司確認。</span></div></div>
+      <div class="warn reveal"><div class="warn-ico">📅</div><div><strong>第一二段須 24 小時內銜接</strong><span>部分票規要求第一段與第二段在 24 小時內轉機，實際規定因航空公司與票種而異。</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMBO -->
+<section class="combo-sec">
+  <div class="combo-inner">
+    <div class="sec-eyebrow" style="color:var(--gold)">划算公式</div>
+    <h2>一張四腿票，到底能玩多少？</h2>
+    <p class="lead">兩種玩法、兩種組合——怎麼搭都比分開買便宜。</p>
+    <div class="combo-tabs"><button class="ctab on" onclick="showCombo('a')">玩法 A：一長一短</button><button class="ctab" onclick="showCombo('b')">玩法 B：一長兩短</button></div>
+
+    <div id="combo-a">
+      <div class="formula reveal"><div class="fp"><div class="fp-icon">🎫</div><div class="fp-label">四腿票</div></div><div class="fop">＋</div><div class="fp"><div class="fp-icon">✈️</div><div class="fp-label">出發單程票</div></div><div class="fop">＝</div><div class="fp res"><div class="fp-icon">🇫🇷</div><div class="fp-label">巴黎長旅行</div></div><div class="fop">＋</div><div class="fp res"><div class="fp-icon">🏖️</div><div class="fp-label">沖繩短旅行</div></div></div>
+      <div class="combo-sub">只買一張去程廉航飛沖繩，第四腿（回沖繩）放棄不飛，把它當作純啟動成本。</div>
+      <div class="receipt reveal">
+        <div class="receipt-title">🧾 費用拆解</div>
+        <div class="rrow"><div class="rrow-left"><span class="rtag" style="background:var(--accent)">購買</span>台北→沖繩 單程（廉航）</div><div class="rprice">NT$ 2,500</div></div>
+        <div class="rrow"><div class="rrow-left"><span class="rtag" style="background:var(--navy)">四腿票</span>OKA→TPE→CDG→TPE→OKA</div><div class="rprice">NT$ 19,800</div></div>
+        <div class="rrow ghost"><div class="rrow-left"><span class="rtag" style="background:var(--leg4);opacity:.5">放棄</span><span style="opacity:.5;text-decoration:line-through">第四腿 TPE→OKA 不飛</span></div><div class="rprice" style="opacity:.3">NT$ 0</div></div>
+        <div class="rtotal"><div><div class="rtotal-label">實際總花費</div><div class="rtotal-sub">1 趟巴黎 + 1 趟沖繩</div></div><div class="rtotal-amount">NT$ 22,300</div></div>
+      </div>
+      <div class="vs reveal">
+        <div class="vsbox old"><div class="vs-label">分開買要花多少？</div><div class="vs-row">台北↔巴黎來回<span>NT$ 28,500</span></div><div class="vs-row">台北↔沖繩來回<span>NT$ 5,500</span></div><div class="vs-div"></div><div class="vs-row tot">合計<span>NT$ 34,000</span></div></div>
+        <div class="vs-mid"><div class="vs-badge">省<br><strong>NT$11,700</strong></div></div>
+        <div class="vsbox new"><div class="vs-label">四腿票組合價</div><div class="vs-row">四腿票 + 出發單程<span>NT$ 22,300</span></div><div class="vs-div"></div><div class="vs-row tot" style="color:var(--teal)">同樣玩到<span style="color:var(--teal)">NT$ 22,300</span></div><div class="vs-trips"><span class="chip long">🇫🇷 巴黎 14 天</span><span class="chip short">🏖️ 沖繩 2 天</span></div></div>
+      </div>
+    </div>
+
+    <div id="combo-b" class="hidden">
+      <div class="formula reveal"><div class="fp"><div class="fp-icon">🎫</div><div class="fp-label">四腿票</div></div><div class="fop">＋</div><div class="fp"><div class="fp-icon">✈️</div><div class="fp-label">出發單程</div></div><div class="fop">＋</div><div class="fp"><div class="fp-icon">✈️</div><div class="fp-label">回程單程</div></div><div class="fop">＝</div><div class="fp res"><div class="fp-icon">🇫🇷</div><div class="fp-label">巴黎長旅行</div></div><div class="fop">＋</div><div class="fp res"><div class="fp-icon">🏖️</div><div class="fp-label">沖繩×2</div></div></div>
+      <div class="combo-sub">出發買一張去程、第四腿飛回沖繩後再買一張回程。三趟旅行、一次搞定。</div>
+      <div class="receipt reveal">
+        <div class="receipt-title">🧾 費用拆解</div>
+        <div class="rrow"><div class="rrow-left"><span class="rtag" style="background:var(--accent)">購買</span>台北→沖繩 單程（廉航）</div><div class="rprice">NT$ 2,500</div></div>
+        <div class="rrow"><div class="rrow-left"><span class="rtag" style="background:var(--navy)">四腿票</span>OKA→TPE→CDG→TPE→OKA</div><div class="rprice">NT$ 19,800</div></div>
+        <div class="rrow"><div class="rrow-left"><span class="rtag" style="background:var(--leg4)">購買</span>沖繩→台北 回程（廉航）</div><div class="rprice">NT$ 2,500</div></div>
+        <div class="rtotal"><div><div class="rtotal-label">實際總花費</div><div class="rtotal-sub">1 趟巴黎 + 2 趟沖繩</div></div><div class="rtotal-amount">NT$ 24,800</div></div>
+      </div>
+      <div class="vs reveal">
+        <div class="vsbox old"><div class="vs-label">分開買要花多少？</div><div class="vs-row">台北↔巴黎來回<span>NT$ 28,500</span></div><div class="vs-row">台北↔沖繩來回 ×2<span>NT$ 11,000</span></div><div class="vs-div"></div><div class="vs-row tot">合計<span>NT$ 39,500</span></div></div>
+        <div class="vs-mid"><div class="vs-badge">省<br><strong>NT$14,700</strong></div></div>
+        <div class="vsbox new"><div class="vs-label">四腿票組合價</div><div class="vs-row">四腿票 + 出發 + 回程<span>NT$ 24,800</span></div><div class="vs-div"></div><div class="vs-row tot" style="color:var(--teal)">三趟全包<span style="color:var(--teal)">NT$ 24,800</span></div><div class="vs-trips"><span class="chip long">🇫🇷 巴黎 14 天</span><span class="chip short">🏖️ 沖繩 3月</span><span class="chip short">🏖️ 沖繩 12月</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="tl-sec">
+  <div class="tl-inner">
+    <div class="sec-eyebrow">實際排程</div>
+    <h2>玩法 B 的一年行事曆</h2>
+    <p class="lead">一組四腿票＋兩張廉航，串出三趟旅行的完整時間表。</p>
+    <div class="tl">
+      <div class="tl-item reveal"><div class="tl-dot" style="background:var(--accent)"></div><div class="tl-card" style="margin-right:auto;margin-left:58%"><div class="mo" style="color:var(--accent)">3月初</div><h4>✈️ 自費飛沖繩</h4><p>買廉航單程 TPE→OKA（約 NT$2,500），開始第一趟沖繩短旅行。</p><div class="tl-tag ext">額外購買 NT$ 2,500</div></div></div>
+      <div class="tl-item reveal"><div class="tl-dot" style="background:var(--leg1)"></div><div class="tl-card" style="margin-left:auto;margin-right:58%"><div class="mo">3月中</div><h4>🎌 第一腿啟動：沖繩→台北</h4><p>沖繩玩兩天後，搭四腿票的第一段 OKA→TPE 回台灣。四腿票正式啟動！</p><div class="tl-tag inc">四腿票內含</div></div></div>
+      <div class="tl-item reveal"><div class="tl-dot" style="background:#d1d5db;border-color:#e5e7eb"></div><div class="tl-card" style="margin-right:auto;margin-left:58%;background:var(--surface2);border-color:transparent"><div class="mo" style="color:#aaa">4月 — 6月</div><h4 style="color:#999">🏠 在台灣正常生活</h4><p style="color:#bbb">中停期間，上班、準備行李、期待歐洲旅行。</p></div></div>
+      <div class="tl-item reveal"><div class="tl-dot" style="background:var(--leg2)"></div><div class="tl-card" style="margin-left:auto;margin-right:58%"><div class="mo" style="color:var(--navy)">7月初</div><h4>🗼 第二腿：飛巴黎！</h4><p>暑假出發，搭第二段 TPE→CDG，開啟巴黎＆歐洲長途旅行。</p><div class="tl-tag inc">四腿票內含</div></div></div>
+      <div class="tl-item reveal"><div class="tl-dot" style="background:var(--leg3)"></div><div class="tl-card" style="margin-right:auto;margin-left:58%"><div class="mo" style="color:var(--teal)">7月底</div><h4>🏡 第三腿：從巴黎回家</h4><p>歐洲玩夠了，搭第三段 CDG→TPE 回台灣休息。</p><div class="tl-tag inc">四腿票內含</div></div></div>
+      <div class="tl-item reveal"><div class="tl-dot" style="background:#d1d5db;border-color:#e5e7eb"></div><div class="tl-card" style="margin-left:auto;margin-right:58%;background:var(--surface2);border-color:transparent"><div class="mo" style="color:#aaa">8月 — 11月</div><h4 style="color:#999">🏠 又回台灣日常</h4><p style="color:#bbb">第二次中停，等待年底的沖繩跨年旅行。</p></div></div>
+      <div class="tl-item reveal"><div class="tl-dot" style="background:var(--leg4)"></div><div class="tl-card" style="margin-right:auto;margin-left:58%"><div class="mo" style="color:var(--gold)">12月底</div><h4>🏖️ 第四腿：再飛沖繩跨年</h4><p>搭第四段 TPE→OKA，第二趟沖繩旅行開始！</p><div class="tl-tag inc">四腿票內含</div></div></div>
+      <div class="tl-item reveal"><div class="tl-dot" style="background:var(--accent)"></div><div class="tl-card" style="margin-left:auto;margin-right:58%"><div class="mo" style="color:var(--accent)">1月初</div><h4>✈️ 自費飛回台灣</h4><p>沖繩跨完年，買廉航單程 OKA→TPE 回家。完美收尾！</p><div class="tl-tag ext">額外購買 NT$ 2,500</div></div></div>
+    </div>
+    <div class="gtbar reveal">
+      <div><div class="gt-title">整年旅行總帳</div><div class="gt-chips"><span class="chip long">🇫🇷 巴黎 14 天</span><span class="chip short">🏖️ 沖繩 3月</span><span class="chip short">🏖️ 沖繩 12月</span></div></div>
+      <div class="gt-right"><div class="gt-amount">NT$ 24,800</div><div class="gt-old">vs 分開買 NT$39,500</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="foot">
+  <div class="note">票價僅為示範概估，實際價格因搜尋日期、艙等、航空公司而異。<br>建議使用 Skyscanner 多城市搜尋功能查詢最新四腿票價格。<br><br>資料整理參考：旅行部落格、Expedia、Skyscanner 公開資訊</div>
+</footer>
+
+<script>
+function showCls(c){
+  document.getElementById('eco-view').classList.toggle('hidden',c!=='eco');
+  document.getElementById('biz-view').classList.toggle('hidden',c!=='biz');
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{b.classList.toggle('on',(c==='eco'&&i===0)||(c==='biz'&&i===1))});
+}
+function showCombo(w){
+  document.getElementById('combo-a').classList.toggle('hidden',w!=='a');
+  document.getElementById('combo-b').classList.toggle('hidden',w!=='b');
+  document.querySelectorAll('.ctab').forEach((b,i)=>{b.classList.toggle('on',(w==='a'&&i===0)||(w==='b'&&i===1))});
+  document.querySelectorAll('#combo-'+w+' .reveal').forEach(el=>{el.classList.remove('in');requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('in')))});
+}
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')})},{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
