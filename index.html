@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'none'; frame-ancestors 'none';">
 <title>FourLeg — 四腿票規劃器</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
@@ -411,7 +412,7 @@ function render(){
           <div class="rc-per">${pax}人 玩法A 真實總價</div>
           ${r.savedA>0?`<div class="rc-save">↓ ${pax}人省 NT$${fmt(r.savedA * pax)}</div>`:''}
           <div class="rc-orig">直飛 NT$${fmt(r.directPrice * pax)}</div>
-          <button class="rc-btn" onclick="window.open('https://www.skyscanner.com.tw','_blank')">前往訂票 →</button>
+          <button class="rc-btn" onclick="window.open('https://www.skyscanner.com.tw','_blank','noopener,noreferrer')">前往訂票 →</button>
         </div></div>
       <button class="rc-tog" onclick="tog(${i})"><span id="tt${i}">展開明細與建議</span> <span id="ta${i}">▾</span></button>
       <div class="rc-exp"><div class="det-cols"><div>
@@ -429,8 +430,8 @@ function render(){
         <div class="ai"><div class="ai-h">💡 AI 建議</div><div class="ai-b">${r.tipS}${r.tipE?' '+r.tipE:''} 選你本來就有興趣的城市當外站，衍生的住宿和時間成本才划得來。</div>${warn?`<div class="ai-w">${warn}</div>`:''}</div>
         <div class="bk-guide"><div class="bk-guide-h">📋 到 Skyscanner 怎麼搜？</div><div class="bk-guide-step">${skyscannerSteps.replace(/\n/g,'<br>')}</div><button class="bk-guide-copy" onclick="navigator.clipboard.writeText(\`${skyscannerSteps}\`).then(()=>this.textContent='已複製！')">複製搜尋步驟</button></div>
         <div class="bk-cta">
-          <button class="bk-btn pri" onclick="window.open('https://www.skyscanner.com.tw','_blank')">🎫 Skyscanner 訂四腿票</button>
-          <button class="bk-btn sec" onclick="window.open('https://www.skyscanner.com.tw','_blank')">✈️ 查廉航 TPE→${r.startCode}</button>
+          <button class="bk-btn pri" onclick="window.open('https://www.skyscanner.com.tw','_blank','noopener,noreferrer')">🎫 Skyscanner 訂四腿票</button>
+          <button class="bk-btn sec" onclick="window.open('https://www.skyscanner.com.tw','_blank','noopener,noreferrer')">✈️ 查廉航 TPE→${r.startCode}</button>
           <button class="bk-btn sec" onclick="alert('票價追蹤功能開發中')">🔔 追蹤此價格</button>
         </div></div></div>`;
   }).join('');
