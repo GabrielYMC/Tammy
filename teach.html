@@ -193,6 +193,20 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 .cta-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;background:var(--teal);color:#fff;font-size:15px;font-weight:700;border-radius:var(--r-sm);transition:background .2s}
 .cta-btn:hover{background:var(--teal-dark)}
 
+/* FAQ */
+.faq-list{display:flex;flex-direction:column;gap:6px}
+.faq-item{background:var(--surface);border-radius:var(--r-sm);border:1px solid var(--border);overflow:hidden;transition:border-color .2s}
+.faq-item.open{border-color:var(--teal)}
+.faq-q{width:100%;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;color:var(--ink);text-align:left;transition:background .15s;gap:12px}
+.faq-q:hover{background:var(--surface2)}
+.faq-arrow{color:var(--ink4);font-size:14px;transition:transform .2s;flex-shrink:0}
+.faq-item.open .faq-arrow{transform:rotate(180deg);color:var(--teal)}
+.faq-a{display:none;padding:0 16px 16px;font-size:13px;line-height:1.85;color:var(--ink2)}
+.faq-item.open .faq-a{display:block}
+.faq-a p{margin-bottom:8px}
+.faq-a p:last-child{margin-bottom:0}
+.faq-a strong{color:var(--ink);font-weight:600}
+
 /* FOOTER */
 .foot{text-align:center;padding:28px 24px;font-size:11px;color:var(--ink4);background:var(--surface)}
 </style>
@@ -208,7 +222,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   <div class="nav-links">
     <a class="nav-link" href="index.html">搜尋</a>
     <a class="nav-link on" href="teach.html">教學</a>
-    <a class="nav-link" href="#">我的監控</a>
+    <a class="nav-link" href="#">票價追蹤</a>
   </div>
 </nav>
 
@@ -374,6 +388,132 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   </div>
 </section>
 
+<!-- FAQ -->
+<section class="sec" id="faq-section">
+  <div class="sec-eyebrow">延伸閱讀</div>
+  <h2>常見問題與航空公司規範</h2>
+  <p class="lead" style="margin-bottom:24px">四腿票有一些眉角，買之前花五分鐘看完可以避開大部分的坑。</p>
+
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>長榮和星宇的中停規則有什麼不同？</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <p><strong>長榮航空（新制）：</strong>一張多城市票允許「一次中停＋一次轉機」。中停是指停留超過 24 小時，轉機是 24 小時以內。實際上代表第 1-2 段和第 3-4 段之間，只有一組可以間隔超過 24 小時（中停），另一組必須在 24 小時內銜接（轉機）。</p>
+        <p>例如：如果你想第一腿回台灣後停幾個月再飛長程（第 1-2 段中停），那第三腿回台灣後就必須當天或隔天接第四腿飛外站（第 3-4 段轉機）。反之亦然。</p>
+        <p><strong>星宇航空：</strong>規則相對寬鬆，允許多段停留，只要所有航段在開票日起一年內完成即可。這就是為什麼可以出現「6 月沖繩、7 月洛杉磯、隔年 2 月北海道」這種跨大半年的安排。</p>
+        <p><strong>華航：</strong>規則又有不同，多城市票的停留規定視票種和艙等而異，建議直接向華航或開票的 OTA 確認具體票規。</p>
+        <p style="color:var(--gold);font-weight:500;margin-top:8px">⚠ 航空公司政策可能隨時調整，以上為 2025-2026 年間的常見規定，購票前請務必確認最新票規。</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>什麼是 Fare Basis Code？為什麼它很重要？</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <p>Fare Basis Code（票價基礎代碼）是每張機票的「定價身分證」，決定了這張票的艙等、折扣等級、可否改退、行李額度、以及最關鍵的——能否組成多城市票。</p>
+        <p>四腿票之所以便宜，是因為系統用外站市場的促銷艙位代碼（如 K、T、V 艙）來計價，這些艙位在台北出發的票上可能根本不開放。但同一架飛機、同一個座位，從吉隆坡出發就套用了不同的 fare basis，價格自然不同。</p>
+        <p>商務艙四腿票通常比較難出現便宜價格，因為促銷艙（D 艙）多數航空限制「僅限來回票，不可多城市」。一旦系統偵測到你的路線是多城市結構，就會自動跳到正價艙（C/J 艙），票價瞬間翻倍。長榮在吉隆坡市場是少數例外，偶爾會開放 D 艙給多城市路線。</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>行李怎麼處理？可以直掛嗎？</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <p><strong>中停段（停留超過 24 小時）：</strong>行李必須在台灣提領出來，因為中停等同入境。下一段再重新辦理報到和託運。</p>
+        <p><strong>轉機段（24 小時內銜接）：</strong>理論上行李可以直掛到下一站。例如沖繩→台北→洛杉磯，如果是 24 小時內轉機，行李可以直掛到洛杉磯。但實際上是否直掛取決於地勤作業，建議在 check-in 時主動向地勤確認。</p>
+        <p><strong>行李額度：</strong>四腿票的行李額度依照票種而定。長榮經濟艙通常包含 2 件 23 公斤託運行李，這在四段都適用。廉航（啟動票）的行李則要另外看該廉航的規定。</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>第四腿可以放棄不飛嗎？</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <p>這個問題在四腿票社群中眾說紛紜。理論上，放棄最後一段不會影響前三段（因為都已經飛完了），部分旅客確實會放棄第四腿。</p>
+        <p>但有幾個風險需要考慮：部分航空公司的票規明確寫到「未使用的航段可能影響票價重新計算」，極端情況下航空公司有權追補差額。此外，如果你的第四腿目的地本身就是你想去的地方（像是雪季北海道），放棄就很可惜了。</p>
+        <p><strong>建議：</strong>如果第四腿是你有興趣的目的地，就飛。如果真的完全不想去，可以考慮放棄，但要有被追補差額的心理準備（實務上發生機率不高）。更好的做法是一開始就選一個你想去的城市當第四腿終點。</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>外站需要簽證嗎？</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <p>台灣護照在常見的外站目的地大多享有免簽或落地簽：</p>
+        <p><strong>免簽：</strong>日本（沖繩、東京、札幌）90天、韓國（首爾）90天。</p>
+        <p><strong>免簽/eVISA：</strong>泰國（曼谷）目前持續延長免簽措施，但政策常有變動，出發前請確認最新狀態。馬來西亞（吉隆坡）持台灣護照可免簽停留 30 天。</p>
+        <p><strong>越南（胡志明）：</strong>需要辦理電子簽證（eVisa），約 US$25，線上申請 3 個工作天。</p>
+        <p>注意：四腿票的第一腿和第四腿你只會短暫停留外站（通常 1-3 天），在免簽天數內不會有問題。但如果你打算在外站停留較長時間，需要確認簽證效期。</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>改票、退票的費用和限制？</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <p>四腿票的改退規定取決於票種的 fare basis code，和一般機票邏輯一樣：促銷艙等（K/T/V）通常不可退、改票收費較高（每段約 NT$3,000-5,000），正價艙等則較有彈性。</p>
+        <p><strong>實務建議：</strong></p>
+        <p>• 買四腿票前先確認行程的確定性，這是最重要的前提。</p>
+        <p>• 如果真的需要改日期，改單一航段和改全部航段的費用不同，建議直接聯繫開票的 OTA 詢問。</p>
+        <p>• 部分 OTA（如易遊網）對改票的處理速度和收費可能和航空公司官網不同，選擇有中文客服的平台很重要。</p>
+        <p>• 考慮加買旅遊不便險，萬一遇到颱風等不可抗力導致航班取消，保險可以 cover 衍生的住宿和交通費用。</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>用哪些平台搜尋和開票？</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <p><strong>搜尋比價：</strong></p>
+        <p>• <strong>Skyscanner</strong>：最多人用，支援「多個城市」搜尋，會導向各家 OTA 比價。</p>
+        <p>• <strong>Google Flights</strong>：介面乾淨，價格日曆很好用，但多城市搜尋的彈性稍差。</p>
+        <p>• <strong>ITA Matrix</strong>：進階玩家用，可以看到完整的 fare basis code 和票規，但不能直接購票。</p>
+        <p><strong>開票平台（OTA）：</strong></p>
+        <p>• <strong>易遊網 ezTravel</strong>：台灣本土，有中文客服，四腿票經驗豐富，是很多台灣旅客的首選。</p>
+        <p>• <strong>Trip.com</strong>：價格有時更低，有中文客服，但處理改退的速度和品質不如本土 OTA。</p>
+        <p>• <strong>其他 OTA</strong>：Skyscanner 會導向各種海外 OTA，有些價格很漂亮但沒有中文客服。四腿票如果出問題需要改票，找不到人溝通會很痛苦，強烈建議選有中文客服的平台。</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>到 Skyscanner 上怎麼搜四腿票？</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <p>步驟很簡單：</p>
+        <p>1. 打開 <a href="https://www.skyscanner.com.tw" target="_blank">Skyscanner</a>，將搜尋模式從「來回」改為<strong>「多個城市」</strong>。</p>
+        <p>2. 預設會出現兩段，點擊「＋加入其他航班」直到出現四段欄位。</p>
+        <p>3. 依序填入四段航程：<br>
+           　第一段：外站起點 → 台北（TPE）<br>
+           　第二段：台北（TPE）→ 長程目的地<br>
+           　第三段：長程目的地 → 台北（TPE）<br>
+           　第四段：台北（TPE）→ 外站終點</p>
+        <p>4. 選擇日期和人數，按搜尋。</p>
+        <p>5. 結果出來後，可以用「最便宜」排序，再從中挑選合適的航班和 OTA。</p>
+        <p>6. 建議同時設定「價格提醒」，Skyscanner 會在價格變動時通知你。</p>
+        <p style="color:var(--teal);font-weight:500;margin-top:8px">💡 也可以直接使用 FourLeg 的<a href="index.html">搜尋工具</a>，我們會自動幫你比較所有外站組合的真實總成本。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CTA -->
 <div class="cta-bar">
   <h3>準備好找你的四腿票了嗎？</h3>
@@ -397,6 +537,14 @@ function showC(w){
   document.getElementById('ca').classList.toggle('hidden',w!=='a');
   document.getElementById('cb').classList.toggle('hidden',w!=='b');
   document.querySelectorAll('.ctab').forEach((b,i)=>{b.classList.toggle('on',(w==='a'&&i===0)||(w==='b'&&i===1))});
+}
+function toggleFaq(btn){
+  const item=btn.parentElement;
+  const wasOpen=item.classList.contains('open');
+  // close all
+  document.querySelectorAll('.faq-item').forEach(el=>el.classList.remove('open'));
+  // toggle clicked
+  if(!wasOpen) item.classList.add('open');
 }
 </script>
 </body>
