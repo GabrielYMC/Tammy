@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FourLeg — 四腿票規劃器</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+:root{
+  --teal:#00a698;--teal-dark:#008a7e;--teal-light:#e6f7f5;--teal-bg:rgba(0,166,152,0.06);
+  --navy:#05203c;--navy2:#0a3260;
+  --ink:#161616;--ink2:#474747;--ink3:#8e8e8e;--ink4:#b8b8b8;
+  --bg:#f1f2f8;--surface:#fff;--surface2:#f7f8fc;--border:#e2e4ed;--border2:#d0d3de;
+  --red:#d1302a;--red-soft:#fef2f2;--green:#0e8345;--green-soft:#ecfdf5;
+  --gold:#c27e00;--gold-soft:#fffbeb;
+  --r:12px;--r-sm:8px;--r-xs:4px;
+  --shadow:0 1px 3px rgba(5,32,60,0.08);--shadow-md:0 4px 12px rgba(5,32,60,0.1);--shadow-lg:0 8px 32px rgba(5,32,60,0.12);
+  --shadow-focus:0 0 0 3px rgba(0,166,152,0.2);
+  --mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans TC',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.5}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select{font-family:inherit;font-size:14px}
+a{color:var(--teal);text-decoration:none}
+.hidden{display:none!important}
+
+/* NAV */
+.nav{background:var(--navy);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.nav-logo{display:flex;align-items:center;gap:8px;color:#fff;font-weight:700;font-size:18px;letter-spacing:-.5px;text-decoration:none}
+.nav-logo svg{width:28px;height:28px}
+.nav-links{display:flex;gap:4px}
+.nav-link{padding:8px 14px;color:rgba(255,255,255,0.6);font-size:13px;font-weight:500;border-radius:var(--r-sm);transition:all .2s;text-decoration:none;display:inline-block}
+.nav-link:hover,.nav-link.on{color:#fff;background:rgba(255,255,255,0.1)}
+
+/* HERO */
+.search-hero{background:linear-gradient(175deg,var(--navy) 0%,var(--navy2) 100%);padding:40px 24px 56px;position:relative;overflow:hidden}
+.search-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:32px;background:var(--bg);border-radius:24px 24px 0 0}
+.sh-inner{max-width:860px;margin:0 auto}
+.sh-title{color:#fff;font-size:22px;font-weight:700;margin-bottom:4px}
+.sh-sub{color:rgba(255,255,255,0.45);font-size:13px;margin-bottom:24px}
+
+/* FORM */
+.sf{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow-lg);position:relative;z-index:2;overflow:hidden}
+.fs{padding:20px 20px 16px;border-bottom:1px solid var(--border)}
+.fs:last-of-type{border-bottom:none}
+.fs-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.fs-num{width:26px;height:26px;border-radius:50%;background:var(--teal);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fs-title{font-size:14px;font-weight:700}
+.fs-hint{font-size:12px;color:var(--ink3);margin-left:4px}
+.fr{display:grid;gap:12px}.fr2{grid-template-columns:1fr 1fr}.fr3{grid-template-columns:1fr 1fr 1fr}.fr4{grid-template-columns:1fr 1fr 1fr 1fr}
+@media(max-width:640px){.fr2,.fr3,.fr4{grid-template-columns:1fr}}
+.fd{position:relative}
+.fd-label{display:block;font-size:11px;font-weight:600;color:var(--ink3);letter-spacing:.5px;margin-bottom:4px;text-transform:uppercase}
+.fd-input{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:14px;color:var(--ink);background:var(--surface);transition:border-color .2s,box-shadow .2s;outline:none}
+.fd-input:focus{border-color:var(--teal);box-shadow:var(--shadow-focus)}
+.fd-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%238e8e8e' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+
+/* Station cards */
+.st-explain{background:var(--surface2);border-radius:var(--r-sm);padding:10px 14px;margin-bottom:14px;display:flex;align-items:flex-start;gap:8px;border:1px solid var(--border)}
+.st-explain-text{font-size:12.5px;color:var(--ink2);line-height:1.65}
+.st-explain-text strong{color:var(--ink)}
+
+.same-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px;color:var(--ink2)}
+.same-row input{width:16px;height:16px;accent-color:var(--teal)}
+.same-row label{cursor:pointer}
+
+.st-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px}
+@media(max-width:500px){.st-pair{grid-template-columns:1fr}}
+.st-pair-label{font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:8px;display:flex;align-items:center;gap:4px}
+.st-pair-label .tag{font-size:10px;font-weight:600;padding:1px 6px;border-radius:4px}
+
+.st-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+@media(max-width:500px){.st-grid{grid-template-columns:repeat(2,1fr)}}
+.sc{position:relative;border:1.5px solid var(--border);border-radius:var(--r-sm);padding:10px;cursor:pointer;transition:all .2s;background:var(--surface);display:flex;flex-direction:column;gap:3px}
+.sc:hover{border-color:var(--ink4);box-shadow:var(--shadow)}
+.sc.sel{border-color:var(--teal);background:var(--teal-bg);box-shadow:var(--shadow-focus)}
+.sc.sel .sc-chk{background:var(--teal);border-color:var(--teal)}
+.sc.sel .sc-chk::after{content:'✓';color:#fff;font-size:9px;font-weight:700}
+.sc-chk{position:absolute;top:6px;right:6px;width:16px;height:16px;border-radius:4px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center}
+.sc-top{display:flex;align-items:center;gap:5px}
+.sc-flag{font-size:16px}
+.sc-name{font-size:12px;font-weight:700}
+.sc-code{font-family:var(--mono);font-size:10px;color:var(--ink3)}
+.sc-meta{font-size:10px;color:var(--ink3)}
+.sc-cost{display:inline-flex;font-size:10px;font-weight:600;padding:1px 6px;border-radius:100px;background:var(--green-soft);color:var(--green);margin-top:1px}
+.sc-why{font-size:10px;color:var(--ink4);font-style:italic;line-height:1.35}
+
+/* Search btn */
+.sf-action{padding:16px 20px;background:var(--surface2);border-top:1px solid var(--border)}
+.search-btn{width:100%;padding:13px;border-radius:var(--r-sm);background:var(--teal);color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s}
+.search-btn:hover{background:var(--teal-dark)}
+
+/* RESULTS */
+.rs{max-width:860px;margin:0 auto;padding:0 24px 48px}
+.rs-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;padding-top:8px}
+.rs-count{font-size:14px;color:var(--ink2)}.rs-count strong{color:var(--ink);font-weight:700}
+.sort-g{display:flex;gap:4px}
+.sort-b{padding:6px 14px;font-size:12px;font-weight:600;color:var(--ink3);border:1px solid var(--border);border-radius:100px;transition:all .2s}
+.sort-b:hover{border-color:var(--ink4);color:var(--ink2)}
+.sort-b.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+
+/* Result card */
+.rc{background:var(--surface);border-radius:var(--r);border:1.5px solid var(--border);margin-bottom:12px;transition:all .2s;overflow:hidden}
+.rc:hover{border-color:var(--teal);box-shadow:var(--shadow-md)}
+.rc.best{border-color:var(--teal)}
+.rc-badge{display:inline-block;padding:3px 12px;font-size:11px;font-weight:700;background:var(--teal);color:#fff;border-radius:0 0 var(--r-sm) var(--r-sm)}
+.rc-body{padding:20px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start}
+@media(max-width:540px){.rc-body{grid-template-columns:1fr}}
+.rc-left{display:flex;flex-direction:column;gap:10px}
+.rc-station{display:flex;align-items:center;gap:8px}
+.rc-flag{font-size:20px}
+.rc-sname{font-size:15px;font-weight:700}
+.rc-ssub{font-size:12px;color:var(--ink3)}
+.route-pills{display:flex;align-items:center;gap:2px;flex-wrap:wrap}
+.rp{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--ink2);padding:3px 6px;border-radius:var(--r-xs);background:var(--surface2)}
+.rp.hl{background:var(--teal-light);color:var(--teal-dark);font-weight:700}
+.rp-a{color:var(--ink4);font-size:9px;padding:0 1px}
+.rc-info{display:flex;gap:14px;flex-wrap:wrap}
+.rc-info .ii{display:flex;flex-direction:column;gap:1px}
+.rc-info .ii .l{font-size:11px;color:var(--ink4)}
+.rc-info .ii .v{font-size:13px;font-weight:600;color:var(--ink2)}
+.rc-right{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:5px;min-width:140px}
+.rc-price{font-family:var(--mono);font-size:24px;font-weight:700;letter-spacing:-.5px}
+.rc-price .cur{font-size:13px;font-weight:500;color:var(--ink3);margin-right:2px}
+.rc-per{font-size:11px;color:var(--ink3)}
+.rc-save{display:inline-flex;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700;background:var(--green-soft);color:var(--green)}
+.rc-orig{font-size:12px;color:var(--ink4);text-decoration:line-through}
+.rc-btn{padding:8px 20px;border-radius:var(--r-sm);font-size:13px;font-weight:600;background:var(--teal);color:#fff;transition:background .2s;margin-top:2px}
+.rc-btn:hover{background:var(--teal-dark)}
+
+/* Expand */
+.rc-exp{border-top:1px solid var(--border);padding:16px 20px;display:none}
+.rc.open .rc-exp{display:block}
+.rc-tog{display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;border-top:1px solid var(--border);font-size:12px;font-weight:600;color:var(--teal);width:100%;transition:background .15s}
+.rc-tog:hover{background:var(--teal-bg)}
+
+.det-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:600px){.det-cols{grid-template-columns:1fr}}
+.det-title{font-size:12px;font-weight:700;color:var(--ink3);margin-bottom:8px;letter-spacing:.5px}
+.dlegs{display:flex;flex-direction:column;gap:5px}
+.dl{display:grid;grid-template-columns:24px 1fr auto;gap:7px;align-items:center;padding:6px 10px;border-radius:var(--r-sm);background:var(--surface2)}
+.dl-n{width:20px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;font-weight:700;color:#fff}
+.dl-r{display:flex;align-items:center;gap:4px;font-size:12px;flex-wrap:wrap}
+.dl-r .c{font-family:var(--mono);font-weight:600}
+.dl-r .a{color:var(--ink4);font-size:9px}
+.dl-r .ci{color:var(--ink3);font-size:11px}
+.dl-t{font-size:9px;font-weight:700;padding:2px 6px;border-radius:100px}
+.dl-s{margin-left:24px;padding:3px 8px;border-left:2px dashed var(--border);font-size:10px;color:var(--ink3)}
+
+.cb{border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden}
+.cb-r{display:grid;grid-template-columns:1fr auto;padding:6px 12px;font-size:12px;border-bottom:1px solid var(--border);align-items:center}
+.cb-r:last-child{border:none}
+.cb-r.tot{background:var(--teal-bg);font-weight:700}
+.cb-r .lb{display:flex;align-items:center;gap:4px}
+.cb-r .vl{font-family:var(--mono);font-weight:600;text-align:right}
+.cb-tg{display:inline-block;padding:1px 5px;border-radius:3px;font-size:9px;font-weight:700}
+
+/* AI */
+.ai{background:linear-gradient(135deg,var(--teal-bg),var(--gold-soft));border:1px solid rgba(0,166,152,0.12);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:10px}
+.ai-h{display:flex;align-items:center;gap:5px;margin-bottom:4px;font-size:12px;font-weight:700;color:var(--teal-dark)}
+.ai-b{font-size:13px;line-height:1.75;color:var(--ink2)}
+.ai-w{margin-top:6px;font-size:12px;color:var(--gold);font-weight:500}
+
+/* Booking guide */
+.bk-guide{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:10px}
+.bk-guide-h{font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:6px}
+.bk-guide-step{font-size:12px;color:var(--ink3);line-height:1.7;font-family:var(--mono)}
+.bk-guide-copy{margin-top:6px;padding:6px 12px;border-radius:var(--r-xs);font-size:11px;font-weight:600;border:1px solid var(--border);color:var(--teal);transition:all .15s}
+.bk-guide-copy:hover{background:var(--teal-bg)}
+
+.bk-cta{display:flex;gap:6px;flex-wrap:wrap}
+.bk-btn{flex:1;min-width:100px;padding:9px 12px;border-radius:var(--r-sm);font-size:12px;font-weight:600;text-align:center;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:4px}
+.bk-btn.pri{background:var(--teal);color:#fff}.bk-btn.pri:hover{background:var(--teal-dark)}
+.bk-btn.sec{background:var(--surface);color:var(--ink2);border:1.5px solid var(--border)}.bk-btn.sec:hover{border-color:var(--ink4)}
+
+/* Loading / Empty / Footer */
+.lo{position:fixed;inset:0;background:rgba(255,255,255,0.85);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:200;flex-direction:column;gap:16px}
+.lo.on{display:flex}
+.sp{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.lo-t{font-size:14px;color:var(--ink2);font-weight:500}
+.empty{text-align:center;padding:64px 24px;color:var(--ink3)}
+.empty .icon{font-size:48px;margin-bottom:12px;opacity:.5}
+.empty .title{font-size:16px;font-weight:600;color:var(--ink2);margin-bottom:4px}
+.foot{text-align:center;padding:28px 24px;font-size:11px;color:var(--ink4);background:var(--surface)}
+.fadeIn{animation:fadeIn .4s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-logo" href="index.html"><svg viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="6" fill="#00a698"/><path d="M7 14h4l3-7 4 14 3-7h4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>FourLeg</a>
+  <div class="nav-links">
+    <a class="nav-link on" href="index.html">搜尋</a>
+    <a class="nav-link" href="teach.html">教學</a>
+    <a class="nav-link" href="#">我的監控</a>
+  </div>
+</nav>
+
+<div class="search-hero"><div class="sh-inner">
+  <div class="sh-title">找到最划算的四腿票組合</div>
+  <div class="sh-sub">輸入目的地和時間，系統自動比較所有外站方案的真實總成本。<a href="teach.html" style="color:rgba(255,255,255,0.7)">不知道四腿票是什麼？→ 看教學</a></div>
+  <div class="sf">
+    <!-- STEP 1 -->
+    <div class="fs"><div class="fs-head"><div class="fs-num">1</div><div class="fs-title">你想去哪裡、什麼時候？</div></div>
+      <div class="fr fr2" style="margin-bottom:12px">
+        <div class="fd"><label class="fd-label">出發地</label><input class="fd-input" value="台北 TPE" readonly style="background:var(--surface2);color:var(--ink3)"></div>
+        <div class="fd"><label class="fd-label">長程目的地</label><select class="fd-input fd-select" id="destSel"><option value="CDG">巴黎 CDG</option><option value="LAX" selected>洛杉磯 LAX</option><option value="LHR">倫敦 LHR</option><option value="VIE">維也納 VIE</option><option value="AMS">阿姆斯特丹 AMS</option><option value="MUC">慕尼黑 MUC</option></select></div>
+      </div>
+      <div class="fr fr4">
+        <div class="fd"><label class="fd-label">長程出發（±3天）</label><input class="fd-input" type="date" id="dDep" value="2026-07-10"></div>
+        <div class="fd"><label class="fd-label">長程回程</label><input class="fd-input" type="date" id="dRet" value="2026-07-24"></div>
+        <div class="fd"><label class="fd-label">艙等</label><select class="fd-input fd-select" id="cabSel"><option value="Y">經濟艙</option><option value="C">商務艙</option></select></div>
+        <div class="fd"><label class="fd-label">旅行人數</label><select class="fd-input fd-select" id="paxSel"><option value="1">1 人</option><option value="2">2 人</option><option value="3">3 人</option><option value="4" selected>4 人（家庭）</option></select></div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="fs"><div class="fs-head"><div class="fs-num">2</div><div class="fs-title">選擇短腿外站</div><span class="fs-hint">— 起終點可以不同</span></div>
+      <div class="st-explain"><span style="font-size:16px;flex-shrink:0">💡</span><div class="st-explain-text"><strong>什麼是短腿外站？</strong>四腿票需要從台灣以外的城市出發，才能觸發便宜的票價。你先自費飛到這個城市（廉航幾千塊），從那裡啟動四腿票。<strong>起點和終點可以是不同城市</strong>（例如沖繩出發、札幌結束），讓你的旅行更靈活。選越多，比較越全面。</div></div>
+
+      <div class="same-row"><input type="checkbox" id="sameChk" checked onchange="toggleSame()"><label for="sameChk">起點和終點選相同外站</label></div>
+
+      <div id="sameMode">
+        <div style="font-size:12px;color:var(--ink3);margin-bottom:6px">點選卡片加入比較（可複選）</div>
+        <div class="st-grid" id="gridSame"></div>
+      </div>
+
+      <div id="diffMode" class="hidden">
+        <div class="st-pair">
+          <div>
+            <div class="st-pair-label"><span class="tag" style="background:var(--red-soft);color:var(--red)">起點</span>第一腿從哪出發？</div>
+            <div class="st-grid" id="gridStart"></div>
+          </div>
+          <div>
+            <div class="st-pair-label"><span class="tag" style="background:var(--gold-soft);color:var(--gold)">終點</span>第四腿飛去哪？</div>
+            <div class="st-grid" id="gridEnd"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sf-action"><button class="search-btn" onclick="doSearch()">🔍 搜尋最佳四腿票組合</button></div>
+  </div>
+</div></div>
+
+<div class="lo" id="lo"><div class="sp"></div><div class="lo-t">正在掃描外站組合與票價...</div></div>
+
+<div class="rs" id="rsSec" style="display:none">
+  <div class="rs-bar"><div class="rs-count" id="rsCnt"></div><div class="sort-g"><button class="sort-b on" data-s="cost">最低總成本</button><button class="sort-b" data-s="save">省最多</button><button class="sort-b" data-s="time">飛時最短</button></div></div>
+  <div id="rsList"></div>
+</div>
+
+<div id="emptyState"><div class="empty"><div class="icon">✈️</div><div class="title">輸入目的地和日期開始搜尋</div><div style="font-size:13px">不知道四腿票？<a href="teach.html">先看教學 →</a></div></div></div>
+
+<div class="foot">票價為示範模擬資料。實際價格請以 <a href="https://www.skyscanner.com.tw" target="_blank">Skyscanner</a> 為準。FourLeg © 2026</div>
+
+<script>
+const ST={
+  OKA:{n:'沖繩',f:'🇯🇵',c:[2200,3500],cr:['樂桃','虎航'],col:'#dc2626',why:'廉航最多、啟動成本最低',meta:'長榮直飛｜1.5hr'},
+  NRT:{n:'東京成田',f:'🇯🇵',c:[3000,5000],cr:['樂桃','虎航'],col:'#0c2340',why:'航班多，可順便玩東京',meta:'長榮直飛｜3hr'},
+  BKK:{n:'曼谷',f:'🇹🇭',c:[3500,5500],cr:['虎航','酷航'],col:'#0d9488',why:'促銷艙多，票價常更低',meta:'長榮直飛｜3.5hr'},
+  KUL:{n:'吉隆坡',f:'🇲🇾',c:[3000,5000],cr:['亞航','酷航'],col:'#6d28d9',why:'商務艙聖地，D艙神價',meta:'長榮直飛｜4.5hr'},
+  SGN:{n:'胡志明',f:'🇻🇳',c:[3000,4500],cr:['越捷','虎航'],col:'#b45309',why:'華航促銷多',meta:'華航直飛｜3.5hr'},
+  ICN:{n:'首爾',f:'🇰🇷',c:[3500,5500],cr:['德威','濟州航空'],col:'#1d4ed8',why:'有韓國計畫可合併',meta:'長榮直飛｜2.5hr'},
+  CTS:{n:'札幌',f:'🇯🇵',c:[4000,6000],cr:['樂桃','虎航'],col:'#059669',why:'雪季熱門，適合當終點',meta:'長榮直飛｜4hr'},
+};
+const DP={
+  CDG:{Y:{d:28500,fl:{OKA:19800,NRT:21200,BKK:18200,KUL:19500,SGN:18900,ICN:22000,CTS:20500}},C:{d:148000,fl:{OKA:135000,NRT:140000,BKK:128000,KUL:75000,SGN:130000,ICN:142000,CTS:138000}}},
+  LAX:{Y:{d:49000,fl:{OKA:33500,NRT:35000,BKK:31000,KUL:34000,SGN:32500,ICN:37000,CTS:34500}},C:{d:135000,fl:{OKA:120000,NRT:125000,BKK:115000,KUL:95000,SGN:118000,ICN:128000,CTS:122000}}},
+  LHR:{Y:{d:30200,fl:{OKA:21500,NRT:23000,BKK:19800,KUL:20500,SGN:20200,ICN:24000,CTS:22000}},C:{d:155000,fl:{OKA:142000,NRT:145000,BKK:132000,KUL:78000,SGN:135000,ICN:148000,CTS:140000}}},
+  VIE:{Y:{d:27500,fl:{OKA:18500,NRT:20000,BKK:17200,KUL:17800,SGN:17500,ICN:21500,CTS:19000}},C:{d:142000,fl:{OKA:130000,NRT:135000,BKK:122000,KUL:72000,SGN:125000,ICN:138000,CTS:132000}}},
+  AMS:{Y:{d:29000,fl:{OKA:20200,NRT:21800,BKK:18500,KUL:19200,SGN:19000,ICN:22800,CTS:20800}},C:{d:150000,fl:{OKA:138000,NRT:142000,BKK:128000,KUL:76000,SGN:132000,ICN:145000,CTS:139000}}},
+  MUC:{Y:{d:28200,fl:{OKA:19500,NRT:21000,BKK:17800,KUL:18500,SGN:18200,ICN:22200,CTS:20000}},C:{d:145000,fl:{OKA:132000,NRT:138000,BKK:125000,KUL:74000,SGN:128000,ICN:140000,CTS:134000}}},
+};
+const AL={OKA:'長榮',NRT:'長榮',BKK:'長榮',KUL:'長榮',SGN:'華航',ICN:'華航',CTS:'星宇'};
+const SH={OKA:1.5,NRT:3,BKK:3.5,KUL:4.5,SGN:3.5,ICN:2.5,CTS:4};
+const LH={CDG:13,LAX:12,LHR:14,VIE:12.5,AMS:13,MUC:12.5};
+const TIPS={
+  OKA:'沖繩是最經典的外站——廉航班次密集、啟動成本最低。沖繩本身就值得玩兩天，新手首選。旺季班次多，萬一遇到颱風也容易找替代航班。',
+  NRT:'東京成田航班選擇多。啟動成本比沖繩略高，但如果本來就想去東京，等於把機票成本攤進去了。',
+  BKK:'曼谷市場促銷艙位特別多，四腿票 fare base 常壓得很低。適合不介意多飛一點的人。',
+  KUL:'商務艙四腿票的聖地。長榮在 KUL 偶爾開放 D 艙促銷，價格是其他外站不可能出現的。經濟艙也有不錯的價差。',
+  SGN:'票價和曼谷接近，華航促銷多。適合想順便體驗越南的旅客。',
+  ICN:'價格優勢不如日本和東南亞明顯，但有韓國旅行計畫時可合併。',
+  CTS:'札幌適合當第四腿終點，特別是雪季北海道。但啟動成本較高，建議搭配其他便宜外站當起點。',
+};
+
+// STATE
+const selSame=new Set(['OKA','NRT','BKK']);
+let selStart=new Set(['OKA']);
+let selEnd=new Set(['CTS']);
+let isSame=true;
+let results=[],sortBy='cost';
+
+function rnd(a,b){return Math.round(a+Math.random()*(b-a))}
+function fmt(n){return n.toLocaleString()}
+
+function cardHTML(code,s,selected){
+  const avg=Math.round((s.c[0]+s.c[1])/2);
+  return `<div class="sc${selected?' sel':''}" data-code="${code}"><div class="sc-chk"></div><div class="sc-top"><span class="sc-flag">${s.f}</span><span class="sc-name">${s.n}</span><span class="sc-code">${code}</span></div><div class="sc-meta">${s.meta}</div><div class="sc-cost">≈NT$${avg.toLocaleString()}</div><div class="sc-why">${s.why}</div></div>`;
+}
+
+function renderGrids(){
+  if(isSame){
+    document.getElementById('gridSame').innerHTML=Object.entries(ST).map(([k,v])=>cardHTML(k,v,selSame.has(k))).join('');
+    document.getElementById('gridSame').querySelectorAll('.sc').forEach(el=>el.onclick=()=>{const c=el.dataset.code;selSame.has(c)?selSame.delete(c):selSame.add(c);renderGrids()});
+  } else {
+    document.getElementById('gridStart').innerHTML=Object.entries(ST).map(([k,v])=>cardHTML(k,v,selStart.has(k))).join('');
+    document.getElementById('gridEnd').innerHTML=Object.entries(ST).map(([k,v])=>cardHTML(k,v,selEnd.has(k))).join('');
+    document.getElementById('gridStart').querySelectorAll('.sc').forEach(el=>el.onclick=()=>{const c=el.dataset.code;selStart.has(c)?selStart.delete(c):selStart.add(c);renderGrids()});
+    document.getElementById('gridEnd').querySelectorAll('.sc').forEach(el=>el.onclick=()=>{const c=el.dataset.code;selEnd.has(c)?selEnd.delete(c):selEnd.add(c);renderGrids()});
+  }
+}
+
+function toggleSame(){
+  isSame=document.getElementById('sameChk').checked;
+  document.getElementById('sameMode').classList.toggle('hidden',!isSame);
+  document.getElementById('diffMode').classList.toggle('hidden',isSame);
+  renderGrids();
+}
+
+renderGrids();
+
+function doSearch(){
+  let pairs=[];
+  if(isSame){
+    if(!selSame.size){alert('請至少選一個外站');return}
+    selSame.forEach(s=>pairs.push([s,s]));
+  } else {
+    if(!selStart.size||!selEnd.size){alert('請至少各選一個起點和終點');return}
+    selStart.forEach(s=>selEnd.forEach(e=>pairs.push([s,e])));
+  }
+  const dest=document.getElementById('destSel').value;
+  const cab=document.getElementById('cabSel').value;
+  const pax=parseInt(document.getElementById('paxSel').value);
+  const tier=DP[dest]?.[cab];
+  if(!tier)return;
+
+  document.getElementById('lo').classList.add('on');
+  document.getElementById('emptyState').style.display='none';
+
+  setTimeout(()=>{
+    results=[];
+    pairs.forEach(([s,e])=>{
+      const flBase=tier.fl[s];if(!flBase)return;
+      const flp=flBase+rnd(-800,800);
+      const acS=rnd(ST[s].c[0],ST[s].c[1]);
+      const acE=s===e?acS:rnd(ST[e].c[0],ST[e].c[1]);
+      const tc=flp+acS;
+      const sh=SH[s]||3;const eh=SH[e]||3;
+      const lh=LH[dest]||13;
+      results.push({
+        startCode:s,endCode:e,startName:ST[s].n,endName:ST[e].n,
+        startFlag:ST[s].f,endFlag:ST[e].f,startColor:ST[s].col,endColor:ST[e].col,
+        dest,airline:AL[s]||'長榮',carrier:ST[s].cr[0],carrierEnd:ST[e].cr[0],
+        fourlegPrice:flp,actStart:acS,actEnd:acE,
+        totalA:tc,totalB:tc+acE,
+        directPrice:tier.d,savedA:tier.d-tc,savedB:tier.d-(tc+acE),
+        totalHrs:Math.round((sh+lh*2+eh)*10)/10,
+        cabin:cab==='C'?'商務艙':'經濟艙',pax,
+        tipS:TIPS[s]||'',tipE:s!==e?(TIPS[e]||''):'',
+        isSame:s===e,
+      });
+    });
+    results.sort((a,b)=>a.totalA-b.totalA);
+    document.getElementById('lo').classList.remove('on');
+    render();
+  },1200);
+}
+
+function render(){
+  const sec=document.getElementById('rsSec');
+  const list=document.getElementById('rsList');
+  if(!results.length){sec.style.display='none';return}
+  sec.style.display='block';
+  document.getElementById('rsCnt').innerHTML=`找到 <strong>${results.length}</strong> 組方案`;
+
+  const sorted=[...results];
+  if(sortBy==='cost')sorted.sort((a,b)=>a.totalA-b.totalA);
+  else if(sortBy==='save')sorted.sort((a,b)=>b.savedA-a.savedA);
+  else sorted.sort((a,b)=>a.totalHrs-b.totalHrs);
+
+  const dn=document.getElementById('destSel').selectedOptions[0].text.split(' ')[0];
+  const lc=['','#05203c','#00a698',''];
+  const ll=['起飛腿','長程去程','長程回程','收尾腿'];
+
+  list.innerHTML=sorted.map((r,i)=>{
+    const best=i===0;
+    lc[0]=r.startColor;lc[3]=r.endColor;
+    const legs=[{f:r.startCode,t:'TPE',fc:r.startName,tc:'台北'},{f:'TPE',t:r.dest,fc:'台北',tc:dn},{f:r.dest,t:'TPE',fc:dn,tc:'台北'},{f:'TPE',t:r.endCode,fc:'台北',tc:r.endName}];
+    const pax=r.pax;
+    const warn=r.savedA<0?'⚠️ 此組合比直飛貴。':(r.cabin==='商務艙'&&r.startCode==='KUL'?'⚠️ KUL 商務艙需碰到 D 艙開放。':'');
+    const stationLabel=r.isSame?`${r.startName} ${r.startCode}`:`${r.startName}→${r.endName}`;
+    const stationSub=r.isSame?`${r.airline}航空 ${r.cabin}｜啟動：${r.carrier}`:`起：${r.carrier} → 終：${r.carrierEnd}｜${r.airline}航空 ${r.cabin}`;
+    const skyscannerSteps=`1. Skyscanner 選「多個城市」\n2. ${r.startCode}→TPE（第一段）\n3. TPE→${r.dest}（第二段）\n4. ${r.dest}→TPE（第三段）\n5. TPE→${r.endCode}（第四段）`;
+
+    return `<div class="rc${best?' best':''} fadeIn" id="rc-${i}">${best?'<div class="rc-badge">最佳方案</div>':''}
+      <div class="rc-body"><div class="rc-left">
+        <div class="rc-station"><span class="rc-flag">${r.startFlag}${r.isSame?'':r.endFlag}</span><div><div class="rc-sname">外站：${stationLabel}</div><div class="rc-ssub">${stationSub}</div></div></div>
+        <div class="route-pills"><span class="rp">${r.startCode}</span><span class="rp-a">→</span><span class="rp">TPE</span><span class="rp-a">→</span><span class="rp hl">${r.dest}</span><span class="rp-a">→</span><span class="rp">TPE</span><span class="rp-a">→</span><span class="rp">${r.endCode}</span></div>
+        <div class="rc-info">
+          <div class="ii"><span class="l">四腿票價</span><span class="v">NT$ ${fmt(r.fourlegPrice)}</span></div>
+          <div class="ii"><span class="l">+啟動廉航</span><span class="v">NT$ ${fmt(r.actStart)}</span></div>
+          <div class="ii"><span class="l">總飛行</span><span class="v">≈${r.totalHrs}hr</span></div>
+        </div></div>
+        <div class="rc-right">
+          <div class="rc-price"><span class="cur">NT$</span>${fmt(r.totalA * pax)}</div>
+          <div class="rc-per">${pax}人 玩法A 真實總價</div>
+          ${r.savedA>0?`<div class="rc-save">↓ ${pax}人省 NT$${fmt(r.savedA * pax)}</div>`:''}
+          <div class="rc-orig">直飛 NT$${fmt(r.directPrice * pax)}</div>
+          <button class="rc-btn" onclick="window.open('https://www.skyscanner.com.tw','_blank')">前往訂票 →</button>
+        </div></div>
+      <button class="rc-tog" onclick="tog(${i})"><span id="tt${i}">展開明細與建議</span> <span id="ta${i}">▾</span></button>
+      <div class="rc-exp"><div class="det-cols"><div>
+        <div class="det-title">四段航程</div><div class="dlegs">
+        ${legs.map((l,li)=>`<div class="dl"><div class="dl-n" style="background:${lc[li]}">${li+1}</div><div class="dl-r"><span class="c">${l.f}</span><span class="a">→</span><span class="c">${l.t}</span><span class="ci">${l.fc}→${l.tc}</span></div><span class="dl-t" style="background:${lc[li]}15;color:${lc[li]}">${ll[li]}</span></div>${li===0?'<div class="dl-s">🏠 中停台灣</div>':''}${li===2?'<div class="dl-s">🏠 中停台灣</div>':''}`).join('')}
+        </div></div><div>
+        <div class="det-title">成本拆解（每人）</div><div class="cb">
+          <div class="cb-r"><div class="lb"><span class="cb-tg" style="background:var(--red-soft);color:var(--red)">額外</span>TPE→${r.startCode} 廉航</div><div class="vl">NT$ ${fmt(r.actStart)}</div></div>
+          <div class="cb-r"><div class="lb"><span class="cb-tg" style="background:var(--teal-light);color:var(--teal)">四腿</span>${r.startCode}→TPE→${r.dest}→TPE→${r.endCode}</div><div class="vl">NT$ ${fmt(r.fourlegPrice)}</div></div>
+          <div class="cb-r tot"><div class="lb">玩法A（一長一短）</div><div class="vl" style="color:var(--teal)">NT$ ${fmt(r.totalA)}</div></div>
+          <div class="cb-r"><div class="lb"><span class="cb-tg" style="background:var(--gold-soft);color:var(--gold)">加購</span>${r.endCode}→TPE 回程</div><div class="vl">≈ NT$ ${fmt(r.actEnd)}</div></div>
+          <div class="cb-r tot"><div class="lb">玩法B（一長兩短）</div><div class="vl" style="color:var(--teal)">NT$ ${fmt(r.totalB)}</div></div>
+          ${pax>1?`<div class="cb-r" style="background:var(--gold-soft)"><div class="lb" style="font-weight:700">×${pax}人 玩法B 合計</div><div class="vl" style="font-weight:700;color:var(--gold)">NT$ ${fmt(r.totalB*pax)}</div></div>`:''}
+        </div></div></div>
+        <div class="ai"><div class="ai-h">💡 AI 建議</div><div class="ai-b">${r.tipS}${r.tipE?' '+r.tipE:''} 選你本來就有興趣的城市當外站，衍生的住宿和時間成本才划得來。</div>${warn?`<div class="ai-w">${warn}</div>`:''}</div>
+        <div class="bk-guide"><div class="bk-guide-h">📋 到 Skyscanner 怎麼搜？</div><div class="bk-guide-step">${skyscannerSteps.replace(/\n/g,'<br>')}</div><button class="bk-guide-copy" onclick="navigator.clipboard.writeText(\`${skyscannerSteps}\`).then(()=>this.textContent='已複製！')">複製搜尋步驟</button></div>
+        <div class="bk-cta">
+          <button class="bk-btn pri" onclick="window.open('https://www.skyscanner.com.tw','_blank')">🎫 Skyscanner 訂四腿票</button>
+          <button class="bk-btn sec" onclick="window.open('https://www.skyscanner.com.tw','_blank')">✈️ 查廉航 TPE→${r.startCode}</button>
+          <button class="bk-btn sec" onclick="alert('監控功能開發中')">🔔 監控價格</button>
+        </div></div></div>`;
+  }).join('');
+}
+
+function tog(i){const c=document.getElementById('rc-'+i);c.classList.toggle('open');document.getElementById('tt'+i).textContent=c.classList.contains('open')?'收合':'展開明細與建議';document.getElementById('ta'+i).textContent=c.classList.contains('open')?'▴':'▾'}
+
+document.querySelectorAll('.sort-b').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.sort-b').forEach(x=>x.classList.remove('on'));b.classList.add('on');sortBy=b.dataset.s;render()})});
+</script>
+</body>
+</html>
